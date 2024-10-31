@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "name": "webIntel",
   "version": "1.0",
-  "permissions": ["activeTab"],
+  "permissions": ["activeTab","storage","tabs"],
   "host_permissions": [
     "http://localhost:3000/*",
     "https://cs4wqtl2-3000.inc1.devtunnels.ms/*"
@@ -13,8 +13,11 @@
   "action": {
     "default_popup": "popup.html",
     "default_icon": {
-      "48": "icon.png"
-    }
+      "16": "icon.png",
+      "48": "icon.png",
+      "128": "icon.png"
+    },
+    "default_title": "WebIntel"
   },
   "content_scripts": [
     {

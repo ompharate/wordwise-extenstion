@@ -1,16 +1,16 @@
 const icon = document.createElement("div");
-icon.innerText = "Show";
+icon.innerText = "wordwise";
 icon.style.position = "absolute";
 icon.style.padding = "5px 10px";
 icon.style.backgroundColor = "#3BC14A";
-icon.style.border = "1px solid #4D5057"; 
+icon.style.border = "1px solid #4D5057";
 icon.style.color = "#FFFFFF";
 icon.style.cursor = "pointer";
 icon.style.zIndex = "1000";
 icon.style.display = "none";
 icon.style.fontSize = "14px";
 icon.style.borderRadius = "5px";
-icon.style.boxShadow = "0 4px 6px rgba(0, 0, 0, 0.1)"; 
+icon.style.boxShadow = "0 4px 6px rgba(0, 0, 0, 0.1)";
 document.body.appendChild(icon);
 
 let selectedText = "";
@@ -67,21 +67,43 @@ icon.addEventListener("click", async () => {
 
   const button = document.createElement("button");
   button.innerText = "Close";
-  button.style.marginTop = "10px";
   button.style.display = "block";
   button.style.padding = "5px 10px";
-  button.style.backgroundColor = "#3BC14A"; 
+  button.style.backgroundColor = "#3BC14A";
   button.style.color = "#FFFFFF";
   button.style.border = "none";
   button.style.borderRadius = "5px";
   button.style.cursor = "pointer";
+
+  const saveButton = document.createElement("button");
+  saveButton.innerText = "Save";
+  saveButton.style.display = "block";
+  saveButton.style.padding = "5px 10px";
+  saveButton.style.backgroundColor = "#3BC14A";
+  saveButton.style.color = "#FFFFFF";
+  saveButton.style.border = "none";
+  saveButton.style.borderRadius = "5px";
+  saveButton.style.cursor = "pointer";
+
+  const buttonGroup = document.createElement("div");
+  buttonGroup.style.display = "flex";
+  buttonGroup.style.gap = "5px";
+  buttonGroup.appendChild(button);
+  buttonGroup.appendChild(saveButton);
+
   cardHeader.appendChild(h1);
-  cardHeader.appendChild(button);
+  cardHeader.appendChild(buttonGroup);
+
   card.appendChild(cardHeader);
-  // card.appendChild(button);
+  const hr = document.createElement("hr");
+  card.appendChild(hr);
 
   button.onclick = () => {
     card.remove();
+  };
+
+  saveButton.onclick = () => {
+    saveToBackend(word);
   };
 
   document.body.appendChild(card);
@@ -91,7 +113,7 @@ icon.addEventListener("click", async () => {
 
     loadingMessage.remove();
 
-    const htmlContent = marked.parse(response || ""); 
+    const htmlContent = marked.parse(response || "");
     console.log("html content", htmlContent);
 
     const markdownContainer = document.createElement("div");
@@ -106,7 +128,7 @@ icon.addEventListener("click", async () => {
 });
 
 async function askGemini(word) {
-  const response = await fetch(`http://localhost:4000/gemini/generate`, {
+  const response = await fetch(`http://localhost:4000/api/gemini/generate`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -123,4 +145,14 @@ async function askGemini(word) {
   const data = await response.json();
   console.log(data);
   return data;
+}
+
+async function saveToBackend(selectedText) {
+  const response = await fetch(`http://localhost:4000/api/user/save`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ word: selectedText }),
+  });
 }
