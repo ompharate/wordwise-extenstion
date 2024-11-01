@@ -1,15 +1,55 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Popup</title>
   <style>
-    body { font-family: Arial, sans-serif; width: 200px; padding: 10px; }
-    button { width: 100%; }
+    body {
+      font-family: Arial, sans-serif;
+      width: 250px;
+      padding: 10px;
+      background-color: #3BC14A;
+      color: white;
+    }
+    h2 {
+      margin-bottom: 20px;
+    }
+    input[type="text"] {
+      width: calc(100% - 10px);
+      padding: 5px;
+      border-radius: 5px;
+      border: none;
+    }
+    button {
+      width: 100%;
+      padding: 10px;
+      margin-top: 10px;
+      background-color: white;
+      color: #3BC14A;
+      border: none;
+      border-radius: 5px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+    button:hover {
+      opacity: 0.9;
+    }
+    button:disabled {
+      background-color: #cccccc;
+      cursor: not-allowed;
+    }
   </style>
 </head>
 <body>
-  <h2>Hello, World!</h2>
-  <button id="clickMe">Click Me</button>
+  <h2>API Key Setup</h2>
+  
+  <label for="apiKey">API Key:</label>
+  <input type="text" id="apiKey" placeholder="Enter your API key" />
+  
+  <button id="submitBtn">Submit</button>
+  <button id="dashboardBtn">Go to Dashboard</button>
+
   <script src="popup.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 </body>

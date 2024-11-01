@@ -128,6 +128,7 @@ icon.addEventListener("click", async () => {
 });
 
 async function askGemini(word) {
+
   const response = await fetch(`http://localhost:4000/api/gemini/generate`, {
     method: "POST",
     headers: {
