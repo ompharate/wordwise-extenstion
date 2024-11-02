@@ -128,7 +128,6 @@ icon.addEventListener("click", async () => {
 });
 
 async function askGemini(word) {
-
   const response = await fetch(`http://localhost:4000/api/gemini/generate`, {
     method: "POST",
     headers: {
@@ -149,11 +148,44 @@ async function askGemini(word) {
 }
 
 async function saveToBackend(selectedText) {
-  const response = await fetch(`http://localhost:4000/api/user/save`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({ word: selectedText }),
+  try {
+    const savedApiKey = await getApiKey(); // Wait for the API key retrieval
+    if (!savedApiKey) {
+      alert("API key not found!");
+      return;
+    }
+
+    alert("Key is: " + savedApiKey);
+
+    const response = await fetch(`http://localhost:4000/api/user/save`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ word: selectedText, extensionKey: savedApiKey }),
+    });
+
+    if (response.ok) {
+      const data = await response.json();
+      alert("Data saved successfully!");
+    } else {
+      alert("Failed to save data to the backend.");
+    }
+  } catch (error) {
+    console.error("Error fetching the API key or saving to backend:", error);
+  }
+}
+
+async function getApiKey() {
+  return new Promise((resolve, reject) => {
+    chrome.storage.sync.get(["apiKey"], function (result) {
+      if (chrome.runtime.lastError) {
+        reject(chrome.runtime.lastError);
+      } else if (result.apiKey) {
+        resolve(result.apiKey);
+      } else {
+        resolve(null);
+      }
+    });
   });
 }
