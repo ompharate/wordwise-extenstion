@@ -114,7 +114,6 @@ icon.addEventListener("click", async () => {
     loadingMessage.remove();
 
     const htmlContent = marked.parse(response || "");
-    console.log("html content", htmlContent);
 
     const markdownContainer = document.createElement("div");
     markdownContainer.innerHTML = htmlContent;
@@ -128,42 +127,45 @@ icon.addEventListener("click", async () => {
 });
 
 async function askGemini(word) {
-  const response = await fetch(`http://localhost:4000/api/gemini/generate`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({ word }),
-  });
+  const response = await fetch(
+    `https://wordwise-backend.vercel.app/api/gemini/generate`,
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ word }),
+    }
+  );
 
-  console.log(response);
 
   if (!response.ok) {
     throw new Error(`HTTP error! status: ${response.status}`);
   }
 
   const data = await response.json();
-  console.log(data);
   return data;
 }
 
 async function saveToBackend(selectedText) {
   try {
-    const savedApiKey = await getApiKey(); // Wait for the API key retrieval
+    const savedApiKey = await getApiKey();
     if (!savedApiKey) {
       alert("API key not found!");
       return;
     }
 
-    alert("Key is: " + savedApiKey);
 
-    const response = await fetch(`http://localhost:4000/api/user/save`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ word: selectedText, extensionKey: savedApiKey }),
-    });
+    const response = await fetch(
+      `https://wordwise-backend.vercel.app/api/user/save`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ word: selectedText, extensionKey: savedApiKey }),
+      }
+    );
 
     if (response.ok) {
       const data = await response.json();

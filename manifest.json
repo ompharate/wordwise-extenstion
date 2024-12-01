@@ -4,6 +4,7 @@
   "version": "1.0",
   "permissions": ["activeTab", "storage", "tabs", "scripting"],
   "host_permissions": [
+    "https://wordwise-backend.vercel.app/*",
     "http://localhost:3000/*",
     "https://cs4wqtl2-3000.inc1.devtunnels.ms/*"
   ],

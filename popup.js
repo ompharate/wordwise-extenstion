@@ -4,30 +4,34 @@ document.addEventListener("DOMContentLoaded", function () {
   const dashboardBtn = document.getElementById("dashboardBtn");
   const errorMessage = document.getElementById("error-message");
 
-  const savedApiKey = localStorage.getItem("apiKey");
-
-  if (savedApiKey) {
-    apiKeyInput.value = savedApiKey;
-    apiKeyInput.disabled = true;
-    submitBtn.textContent = "Edit";
-  }
+  chrome.storage.sync.get("apiKey", function (data) {
+    if (data.apiKey) {
+      apiKeyInput.value = data.apiKey;
+      apiKeyInput.disabled = true;
+      submitBtn.textContent = "Edit";
+    }
+  });
 
   submitBtn.addEventListener("click", function () {
-    errorMessage.style.display = "none"; 
+    errorMessage.style.display = "none";
 
     if (submitBtn.textContent === "Submit") {
       const apiKey = apiKeyInput.value.trim();
 
       if (apiKey) {
-    
         chrome.storage.sync.set({ apiKey: apiKey }, function () {
-          console.log("API key saved:", apiKey);
+          if (chrome.runtime.lastError) {
+            console.error("Error saving API key:", chrome.runtime.lastError);
+            errorMessage.textContent = "Failed to save API key.";
+            errorMessage.style.display = "block";
+          } else {
+            apiKeyInput.disabled = true;
+            submitBtn.textContent = "Edit";
+          }
         });
-        
-        apiKeyInput.disabled = true; 
-        submitBtn.textContent = "Edit"; 
       } else {
-        errorMessage.style.display = "block"; 
+        errorMessage.textContent = "Please enter a valid API key.";
+        errorMessage.style.display = "block";
       }
     } else if (submitBtn.textContent === "Edit") {
       apiKeyInput.disabled = false;
@@ -36,7 +40,8 @@ document.addEventListener("DOMContentLoaded", function () {
   });
 
   dashboardBtn.addEventListener("click", function () {
-  
-    alert("Navigating to dashboard...");
+    const dashboardUrl = "https://wordwise.ompharate.tech/dashboard";
+    chrome.tabs.create({ url: dashboardUrl }, function (tab) {
+    });
   });
 });
